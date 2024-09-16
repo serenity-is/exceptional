@@ -4,7 +4,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>Latest</LangVersion>
-
+    <Version>2.1.36</Version>
     <Authors>Nick Craver</Authors>    
     <PackageId>$(AssemblyName)</PackageId>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
@@ -20,7 +20,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers" />
   </ItemGroup>

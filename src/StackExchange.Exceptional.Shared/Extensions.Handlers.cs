@@ -1,28 +1,39 @@
-﻿using StackExchange.Exceptional.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 
 namespace StackExchange.Exceptional
 {
     public static partial class Extensions
     {
+        static T GetProperty<T>(object obj, string name)
+        {
+            var value = obj.GetType().GetProperty(name)?.GetValue(obj);
+            if (value == null || !typeof(T).IsAssignableFrom(value.GetType()))
+                return default;
+
+            return (T)value;
+        }
+
         /// <summary>
         /// Adds the default data handlers to a handlers collection.
         /// </summary>
         /// <param name="handlers">The dictionary to register these default handlers on.</param>
         public static Dictionary<string, Action<Error>> AddDefault(this Dictionary<string, Action<Error>> handlers)
         {
-            handlers?.AddHandler<SqlException>((e, se) =>
+            static void sqlExceptionHandler(Error e, Exception ex)
             {
-                if (se.Data == null) return;
-                e.AddCommand(new Command("SQL Server Query", se.Data.Contains("SQL") ? se.Data["SQL"] as string : null)
-                    .AddData(nameof(se.Server), se.Server)
-                    .AddData(nameof(se.Number), se.Number.ToString())
-                    .AddData(nameof(se.LineNumber), se.LineNumber.ToString())
-                    .AddData(se.Procedure.HasValue(), nameof(se.Procedure), se.Procedure)
+                if (ex.Data == null) return;
+                var procedure = GetProperty<string>(ex, "Procedure");
+                e.AddCommand(new Command("SQL Server Query", ex.Data.Contains("SQL") ? ex.Data["SQL"] as string : null)
+                    .AddData("Server", GetProperty<string>(ex, "Server"))
+                    .AddData("Number", GetProperty<int>(ex, "Number").ToString())
+                    .AddData("LineNumber", GetProperty<int>(ex, "LineNumber").ToString())
+                    .AddData(!string.IsNullOrEmpty(procedure), "Procedure", procedure)
                 );
-            });
+            }
+
+            handlers?.AddHandler("Microsoft.Data.SqlClient.SqlException", sqlExceptionHandler);
+            handlers?.AddHandler("System.Data.SqlClient.SqlException", sqlExceptionHandler);
             handlers?.AddHandler("StackRedis.CacheException", (e, ex) =>
             {
                 var cmd = e.AddCommand(new Command("Redis"));
