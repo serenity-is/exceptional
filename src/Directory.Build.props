@@ -4,7 +4,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>Latest</LangVersion>
-    <Version>2.1.36</Version>
+    <Version>2.2.33</Version>
     <Authors>Nick Craver</Authors>    
     <PackageId>$(AssemblyName)</PackageId>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
