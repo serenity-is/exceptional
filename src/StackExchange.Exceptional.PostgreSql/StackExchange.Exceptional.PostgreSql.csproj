@@ -9,6 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\StackExchange.Exceptional.Shared\StackExchange.Exceptional.Shared.csproj" />
     <PackageReference Include="Dapper" Version="1.50.2" />
-    <PackageReference Include="Npgsql" Version="3.2.5" />
+    <PackageReference Include="Npgsql" Version="4.0.14" />
   </ItemGroup>
 </Project>
